@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-api-development
+spec:
+  replicas: 2
+  selector: 
+    matchlabels:
+      app: node-api
+  template:
+    metadata:
+      labels:
+        app:node-api
+    spec:
+      containers:
+        - name: api-container
+          image: node: 18-alpine
+          ports:
+            - containerPort: 3000
+          resourses:
+            requests:
+              cpu: "200m"
+              memory: "512Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            intitalDelaySeconds: 18
+            periodSeconds: 25
+          env:
+            -  name: SERVICE_ENDPOINT
+               valueForm:
+                  configMapKeyRef:
+                    name: node-api-config
+                    key: SERVICE_ENDPOINT
+            -  name : APP_LOG_LEVEL
+               valueForm:
+                  configMapKeyRef:
+                    name: node-api-config
+                    key: APP_LOG_LEVEL
+            -  name : DATABASE_URL
+                  secretKeyRef:
+                    name: database_credentials
+                    key: DATABASE_URL
