@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: node-api-config
+data:
+  SERVICE_ENDPOINT:
+"https://service.internal"
+  APP_LOG_LEVEL: "debug"
